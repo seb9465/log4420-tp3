@@ -1,5 +1,3 @@
 node_modules/
 coverage/
-.nyc_output/423d7616-f22b-4b06-978d-aa3509429e43.json
-.nyc_output/processinfo/423d7616-f22b-4b06-978d-aa3509429e43.json
-.nyc_output/processinfo/index.json
+.nyc_output/
