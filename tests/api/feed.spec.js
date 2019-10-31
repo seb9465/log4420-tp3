@@ -8,7 +8,7 @@ const describe = mocha.describe
 const it = mocha.it
 const expect = chai.expect
 
-describe('GET /api/feed', () => {
+describe.only('GET /api/feed', () => {
 
   it('should get feeds', done => {
 

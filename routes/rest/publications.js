@@ -97,20 +97,27 @@ module.exports = servicePublication => {
 
 	router.delete('/:id', (req, res, next) => {
 		servicePublication.removePublication(req.params.id)((err) => {
-			// Gestion du cas où le ID n'existe pas.
-			// if (req.app.locals.t && req.app.locals.t['ERRORS'] && req.app.locals.t['ERRORS']['PUB_NOT_FOUND_ERROR']) {
-			// 	res.status(404).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_NOT_FOUND_ERROR']] });
-			// } else {
-			// 	res.status(404).json({ 'errors': [err.message] });
-			// }
-
 			if (err) {
-				if (req.app.locals.t === undefined ||
+				if (err.name === 'NOT_FOUND') {
+					const isTranslationNotOk = req.app.locals.t === undefined ||
 					req.app.locals.t['ERRORS'] === undefined ||
-					req.app.locals.t['ERRORS']['PUB_DELETE_ERROR'] === undefined) {
-					res.status(500).json({ 'errors': [err.message] });
+					req.app.locals.t['ERRORS']['PUB_NOT_FOUND_ERROR'] === undefined;
+
+					if (isTranslationNotOk) {
+						res.status(404).json({ 'errors': [err.message] });
+					} else {
+						res.status(404).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_NOT_FOUND_ERROR']] });
+					}
 				} else {
-					res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_DELETE_ERROR']] });
+					const isTranslationNotOk = req.app.locals.t === undefined ||
+						req.app.locals.t['ERRORS'] === undefined ||
+						req.app.locals.t['ERRORS']['PUB_DELETE_ERROR'] === undefined;
+
+					if (isTranslationNotOk) {
+						res.status(500).json({ 'errors': [err.message] });
+					} else {
+						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_DELETE_ERROR']] });
+					}
 				}
 			} else {
 				res.send('done');

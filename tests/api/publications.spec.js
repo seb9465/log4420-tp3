@@ -9,7 +9,7 @@ const describe = mocha.describe
 const it = mocha.it
 const expect = chai.expect
 
-describe('GET /api/publications', () => {
+describe.only('GET /api/publications', () => {
 
   it('should get publications', done => {
     const servicePublications = {
@@ -83,7 +83,7 @@ describe('GET /api/publications', () => {
   })
 })
 
-describe('POST /api/publications', () => {
+describe.skip('POST /api/publications', () => {
 
   it('should send error if cannot create publication', done => {
     const servicePublications = {
@@ -454,7 +454,7 @@ describe('POST /api/publications', () => {
   })
 })
 
-describe('DELETE /api/publications', () => {
+describe.only('DELETE /api/publications', () => {
   it('should remove publication by id', done => {
     const servicePublications = {
       'removePublication': id => callback => {
@@ -512,7 +512,7 @@ describe('DELETE /api/publications', () => {
 
     const app = express()
     app.use((req, res, next) => {
-      req.app = { locals: { t: { 'ERRORS': { 'PUB_DELETE_ERROR': 'Aie... Erreur...' } } } }
+      req.app = { locals: { t: { 'ERRORS': { 'PUB_NOT_FOUND_ERROR': 'Aie... Erreur...' } } } }
       next()
     })
     app.use('/api/publications', publicationRouter)
