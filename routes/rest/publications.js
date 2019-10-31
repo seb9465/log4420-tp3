@@ -22,8 +22,8 @@ module.exports = servicePublication => {
 
 		servicePublication.getPublications(pageOpts)((err, data) => {
 			if (err) {
-				if (req.app.locals.t === undefined &&
-					req.app.locals.t['ERRORS'] === undefined &&
+				if (req.app.locals.t === undefined ||
+					req.app.locals.t['ERRORS'] === undefined ||
 					req.app.locals.t['ERRORS']['PUBS_ERROR'] === undefined) {
 						res.status(500).json({ 'errors': [err.message] });
 					} else {
@@ -105,8 +105,8 @@ module.exports = servicePublication => {
 			// }
 
 			if (err) {
-				if (req.app.locals.t === undefined && 
-					req.app.locals.t['ERRORS'] === undefined &&
+				if (req.app.locals.t === undefined ||
+					req.app.locals.t['ERRORS'] === undefined ||
 					req.app.locals.t['ERRORS']['PUB_DELETE_ERROR'] === undefined) {
 					res.status(500).json({ 'errors': [err.message] });
 				} else {

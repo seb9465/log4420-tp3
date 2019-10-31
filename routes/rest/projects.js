@@ -7,16 +7,47 @@ module.exports = (serviceProjects, servicePublication) => {
 	router.get('/', (req, res, next) => {
 		serviceProjects.getProjects(req.app.locals.lang)((err, data) => {
 			if (err) {
-				res.status(500).json({ 'errors': [err.message] });
+				const isTranslationNotOk = req.app.locals.t === undefined ||
+						req.app.locals.t['ERRORS'] === undefined ||
+						req.app.locals.t['ERRORS']['PROJECT_ERROR'] === undefined;
+					if (isTranslationNotOk) {
+						res.status(500).json({ 'errors': [err.message] });
+					} else {
+						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PROJECT_ERROR']] });
+					}
 			} else {
-				res.status(200).json(data);
+				res.json(data);
 			}
 		});
 	});
 
 	router.get('/:id', (req, res, next) => {
-		serviceProjects.getProjectById(req.app.locals.t)(req.app.locals.lang)(req.params.id)((err, data) => {
-			
+		serviceProjects.getProjectById(req.app.locals.t)(req.app.locals.lang)(req.params.id)((err, projects) => {
+			if (err) {
+				if (err.name == 'NOT_FOUND') {
+					const isTranslationNotOk = req.app.locals.t === undefined ||
+						req.app.locals.t['ERRORS'] === undefined ||
+						req.app.locals.t['ERRORS']['PROJECT_NOT_FOUND_ERROR'] === undefined;
+					if (isTranslationNotOk) {
+						res.status(404).json({ 'errors': [err.message] });
+					} else {
+						res.status(404).json({ 'errors': [req.app.locals.t['ERRORS']['PROJECT_NOT_FOUND_ERROR'] + req.params.id] });
+					}
+				} else {
+					const isTranslationNotOk = req.app.locals.t === undefined ||
+						req.app.locals.t['ERRORS'] === undefined ||
+						req.app.locals.t['ERRORS']['PROJECT_ERROR'] === undefined;
+					if (isTranslationNotOk) {
+						res.status(500).json({ 'errors': [err.message] });
+					} else {
+						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PROJECT_ERROR']] });
+					}
+				}
+			} else {
+				servicePublication.getPublicationsByIds(projects.publications)((err, publications) => {
+					res.json({'project': projects, 'publications': publications});
+				});
+			}
 		});
 	})
 
