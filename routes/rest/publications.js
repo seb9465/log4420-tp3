@@ -22,10 +22,12 @@ module.exports = servicePublication => {
 
 		servicePublication.getPublications(pageOpts)((err, data) => {
 			if (err) {
-				if (req.app.locals.t && req.app.locals.t['ERRORS'] && req.app.locals.t['ERRORS']['PUBS_ERROR']) {
-					res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUBS_ERROR']] });
-				} else {
-					res.status(500).json({ 'errors': [err.message] });
+				if (req.app.locals.t === undefined &&
+					req.app.locals.t['ERRORS'] === undefined &&
+					req.app.locals.t['ERRORS']['PUBS_ERROR'] === undefined) {
+						res.status(500).json({ 'errors': [err.message] });
+					} else {
+						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUBS_ERROR']] });
 				}
 			} else {
 				data = data ? data : [];
@@ -79,10 +81,12 @@ module.exports = servicePublication => {
 	
 			servicePublication.createPublication(publication)((err) => {
 				if (err) {
-					if (req.app.locals.t && req.app.locals.t['ERRORS'] && req.app.locals.t['ERRORS']['PUB_CREATE_ERROR']) {
-						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_CREATE_ERROR']] });
-					} else {
+					if (req.app.locals.t === undefined &&
+						req.app.locals.t['ERRORS'] === undefined &&
+						req.app.locals.t['ERRORS']['PUB_CREATE_ERROR'] === undefined) {
 						res.status(500).json({ 'errors': [err.message] });
+					} else {
+						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_CREATE_ERROR']] });
 					}
 				} else {
 					res.status(201).json('OK');
@@ -101,10 +105,12 @@ module.exports = servicePublication => {
 			// }
 
 			if (err) {
-				if (req.app.locals.t && req.app.locals.t['ERRORS'] && req.app.locals.t['ERRORS']['PUB_DELETE_ERROR']) {
-					res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_DELETE_ERROR']] });
-				} else {
+				if (req.app.locals.t === undefined && 
+					req.app.locals.t['ERRORS'] === undefined &&
+					req.app.locals.t['ERRORS']['PUB_DELETE_ERROR'] === undefined) {
 					res.status(500).json({ 'errors': [err.message] });
+				} else {
+					res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_DELETE_ERROR']] });
 				}
 			} else {
 				res.send('done');

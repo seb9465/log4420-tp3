@@ -14,7 +14,11 @@ module.exports = (serviceProjects, servicePublication) => {
 		});
 	});
 
-	
+	router.get('/:id', (req, res, next) => {
+		serviceProjects.getProjectById(req.app.locals.t)(req.app.locals.lang)(req.params.id)((err, data) => {
+			
+		});
+	})
 
 	return router
 }
