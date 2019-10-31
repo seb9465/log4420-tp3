@@ -92,7 +92,7 @@ module.exports = servicePublication => {
 	});
 
 	router.delete('/:id', (req, res, next) => {
-		servicePublication.removePublication(req.query.id)((err) => {
+		servicePublication.removePublication(req.params.id)((err) => {
 			// Gestion du cas où le ID n'existe pas.
 			// if (req.app.locals.t && req.app.locals.t['ERRORS'] && req.app.locals.t['ERRORS']['PUB_NOT_FOUND_ERROR']) {
 			// 	res.status(404).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_NOT_FOUND_ERROR']] });
@@ -107,7 +107,7 @@ module.exports = servicePublication => {
 					res.status(500).json({ 'errors': [err.message] });
 				}
 			} else {
-				res.status(200).json('OK');
+				res.send('done');
 			}
 		});
 	});
