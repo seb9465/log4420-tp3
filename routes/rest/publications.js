@@ -27,6 +27,7 @@ module.exports = servicePublication => {
 					req.app.locals.t['ERRORS']['PUBS_ERROR'] === undefined) {
 						res.status(500).json({ 'errors': [err.message] });
 					} else {
+						// TODO : Ajuster l'erreur pour qu'elle soit comme celle du test (remettre à zéro le fichier de tests).
 						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUBS_ERROR']] });
 				}
 			} else {

@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const fetch = require('node-fetch')
+const changeLang = require('./../middlewares/changeLang').changeLang
 
 const moment = require('moment')
 
@@ -18,14 +19,6 @@ router.get('/', changeLang, (req, res, next) => {
 		});
 });
 
-function changeLang(req, res, next) {
-	const isClangQueryOk = !(req.query === undefined && req.query.clang === undefined);
 
-	if (isClangQueryOk) {
-		moment.locale(req.query.clang);
-	}
-
-	return next();
-}
 
 module.exports = router

@@ -105,6 +105,7 @@ const comparePublications = pagingOpts => (p1, p2) => {
  *  @param {projectPublicationsCallback} callback - Fonction de rappel pour obtenir le résultat
  */
 const getPublicationsByIds = fs => pubIds => callback => {
+	// TODO : Remove the object with Sorting
   getPublications(fs)({sorting: [['date'], ['asc']]})((err, publications) => {
     if (err) {
       callback(err, null)
