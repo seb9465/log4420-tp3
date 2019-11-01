@@ -100,8 +100,8 @@ module.exports = servicePublication => {
 			if (err) {
 				if (err.name === 'NOT_FOUND') {
 					const isTranslationNotOk = req.app.locals.t === undefined ||
-					req.app.locals.t['ERRORS'] === undefined ||
-					req.app.locals.t['ERRORS']['PUB_NOT_FOUND_ERROR'] === undefined;
+						req.app.locals.t['ERRORS'] === undefined ||
+						req.app.locals.t['ERRORS']['PUB_NOT_FOUND_ERROR'] === undefined;
 
 					if (isTranslationNotOk) {
 						res.status(404).json({ 'errors': [err.message] });
