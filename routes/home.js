@@ -6,7 +6,7 @@ const moment = require('moment')
 
 router.get('/', changeLang, (req, res, next) => {
 	fetch('http://localhost:3000/api/feed/')
-		.then(res => res.json())
+		.then(response => response.json())
 		.then(feeds => {
 			res.render('./../views/index', { feeds: feeds }, (err, html) => {
 				if (err) {
