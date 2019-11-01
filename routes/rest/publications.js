@@ -16,10 +16,10 @@ module.exports = servicePublication => {
 			limit: limit,
 			pageNumber: page,
 			sorting: [
-				[ sortBy, orderBy ]
+				sortBy, orderBy
 			]
 		};
-
+		
 		servicePublication.getPublications(pageOpts)((err, data) => {
 			if (err) {
 				if (req.app.locals.t === undefined ||
