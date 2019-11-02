@@ -4,8 +4,15 @@ const router = express.Router()
 const moment = require('moment')
 const changeLang = require('./../middlewares/changeLang').changeLang
 
-router.get('/', changeLang, (req, res, next) => {
-	fetch('http://localhost:3000/api/publications/')
+/**
+ * Gets all the the publications by calling the BE's API.
+ * Then, renders the HTML page.
+ * @param {Request} req Request object from Express
+ * @param {Response} res Response object from Express
+ * @param {Function} next Middleware from Express
+ */
+function getPublications (req, res, next) {
+	fetch('http://localhost:3000/api/publications/', { method: 'GET' })
 		.then(response => response.json())
 		.then(publications => {
 			const objForTemplate = {
@@ -13,7 +20,7 @@ router.get('/', changeLang, (req, res, next) => {
 				pubFormErrors: {},	// TODO
 				pagingOptions: {},
 				numberOfPages: {},
-				monthNames: {}
+				monthNames: moment.months()
 			};
 			
 			res.render('./../views/publication', objForTemplate, (err, html) => {
@@ -24,6 +31,22 @@ router.get('/', changeLang, (req, res, next) => {
 				}
 			});
 		});
-});
+}
+
+/**
+ * Saves a publication by calling the BE's API.
+ * @param {Request} req Request object from Express
+ * @param {Response} res Response object from Express
+ * @param {Function} next Middleware from Express
+ */
+function savePublication (req, res, next) {
+	fetch('http://localhost:3000/api/publications/', { method: 'POST', body: req.body })
+		.then(response => next());
+}
+
+router.get('/', changeLang, getPublications);
+
+router.post('/', savePublication, getPublications);
+
 
 module.exports = router
