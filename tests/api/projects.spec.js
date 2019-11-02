@@ -10,7 +10,7 @@ const expect = chai.expect
 
 // const getProjectsFactory = require('../../routes/rest/projects')
 
-describe.only('GET /api/projects', () => {
+describe('GET /api/projects', () => {
 
   it('should get projects', done => {
 

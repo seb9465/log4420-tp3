@@ -48,5 +48,4 @@ router.get('/', changeLang, getPublications);
 
 router.post('/', savePublication, getPublications);
 
-
 module.exports = router

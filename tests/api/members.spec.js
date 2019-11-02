@@ -10,7 +10,7 @@ const request = require('supertest')
 
 const getMembersFactory = require('../../routes/rest/members')
 
-describe.only('GET /api/members', done => {
+describe('GET /api/members', done => {
 
   it('should get members', () => {
     const serviceTeam = {

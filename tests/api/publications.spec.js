@@ -9,7 +9,7 @@ const describe = mocha.describe
 const it = mocha.it
 const expect = chai.expect
 
-describe.only('GET /api/publications', () => {
+describe('GET /api/publications', () => {
 
   it('should get publications', done => {
     const servicePublications = {
@@ -454,7 +454,7 @@ describe.skip('POST /api/publications', () => {
   })
 })
 
-describe.only('DELETE /api/publications', () => {
+describe('DELETE /api/publications', () => {
   it('should remove publication by id', done => {
     const servicePublications = {
       'removePublication': id => callback => {
