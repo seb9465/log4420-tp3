@@ -83,7 +83,7 @@ describe('GET /api/publications', () => {
   })
 })
 
-describe.skip('POST /api/publications', () => {
+describe('POST /api/publications', () => {
 
   it('should send error if cannot create publication', done => {
     const servicePublications = {
@@ -512,7 +512,7 @@ describe('DELETE /api/publications', () => {
 
     const app = express()
     app.use((req, res, next) => {
-      req.app = { locals: { t: { 'ERRORS': { 'PUB_NOT_FOUND_ERROR': 'Aie... Erreur...' } } } }
+      req.app = { locals: { t: { 'ERRORS': { 'PUB_DELETE_ERROR': 'Aie... Erreur...' } } } }
       next()
     })
     app.use('/api/publications', publicationRouter)

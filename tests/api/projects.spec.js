@@ -55,7 +55,7 @@ describe('GET /api/projects', () => {
 
     const app = express()
     app.use((req, res, next) => {
-      req.app = { locals: { t: { 'ERRORS': { 'PROJECT_ERROR': 'Aie... Erreur...' } } } }
+      req.app = { locals: { t: { 'ERRORS': { 'PROJECTS_ERROR': 'Aie... Erreur...' } } } }
       next()
     })
     app.use('/api/projects', projectsRouter)
@@ -129,7 +129,7 @@ describe('GET /api/projects', () => {
 
     const app = express()
     app.use((req, res, next) => {
-      req.app = { locals: { t: { 'ERRORS': { 'PROJECT_NOT_FOUND_ERROR': 'Projet non trouvé: ' } } } }
+      req.app = { locals: { t: { 'ERRORS': { 'PROJECT_NOT_FOUND': 'Projet non trouvé: ' } } } }
       next()
     })
     app.use('/api/projects', projectsRouter)
