@@ -12,7 +12,12 @@ const changeLang = require('./../middlewares/changeLang').changeLang
  * @param {Function} next Middleware from Express
  */
 function getPublications (req, res, next) {
-	fetch('http://localhost:3000/api/publications/', { method: 'GET' })
+	const opts = { 
+		methods: 'GET',
+		headers: {Cookie: `ulang=${req.app.locals.lang}`}
+	};
+
+	fetch('http://localhost:3000/api/publications/', opts)
 		.then(response => response.json())
 		.then(publications => {
 			const objForTemplate = {
@@ -40,7 +45,12 @@ function getPublications (req, res, next) {
  * @param {Function} next Middleware from Express
  */
 function savePublication (req, res, next) {
-	fetch('http://localhost:3000/api/publications/', { method: 'POST', body: req.body })
+	const opts = { 
+		methods: 'POST',
+		headers: {Cookie: `ulang=${req.app.locals.lang}`}
+	};
+
+	fetch('http://localhost:3000/api/publications/', opts)
 		.then(response => next());
 }
 

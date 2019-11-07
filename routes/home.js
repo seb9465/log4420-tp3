@@ -6,7 +6,9 @@ const changeLang = require('./../middlewares/changeLang').changeLang
 const moment = require('moment')
 
 router.get('/', changeLang, (req, res, next) => {
-	fetch('http://localhost:3000/api/feed/')
+	const headers = { headers: {Cookie: `ulang=${req.app.locals.lang}`} };
+	
+	fetch('http://localhost:3000/api/feed/', headers)
 		.then(response => response.json())
 		.then(feeds => {
 			res.render('./../views/index', { feeds: feeds }, (err, html) => {
