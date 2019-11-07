@@ -58,11 +58,40 @@ let addNews = (client) => {
 					await col.insertOne({...doc});
 				});
 
+				console.log('[MongoDB] Added news from YAML.');
+
 				resolve()
 			}
 		})
 	))
+}
 
+let addProjects = (client) => {
+	return new Promise((resolve, reject) => (
+		fs.readFile('./data/projects.yml', 'utf8', async (err, content) => {
+			if (err) {
+				throw err;
+			} else {
+				await client.db(config.dbName).createCollection('projects');
+				const yamlContentOpt = yaml.safeLoad(content);
+				const projects = ((yamlContentOpt === null) ? [] : yamlContentOpt).map(s => {
+					return {
+						...s,
+						publications: (s.publications === undefined) ? [] : s.publications
+					}
+				});
+	
+				const col = client.db(config.dbName).collection('projects');
+				projects.forEach(async doc => {
+					await col.insertOne({...doc});
+				});
+
+				console.log('[MongoDB] Added projects from YAML.');
+
+				resolve()
+			}
+		})
+	))
 }
 
 
@@ -74,6 +103,8 @@ let main = async () => {
 	await removeAll(client);
 
 	await addNews(client);
+
+	await addProjects(client);
 
 	// Déconnexion de la base de donnée.
 	disconnectClient(client);
