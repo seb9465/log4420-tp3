@@ -3,26 +3,49 @@ const yaml = require('js-yaml')
 const fs = require('fs')
 const config = require('./config.json')
 
-let db;
-
-MongoClient.connect(config.dbUrl + '/' + config.dbName, (err, d) => {
-	if (err) throw err;
-	db = d;
-
-	var collection = db.collection('foods')
-	collection.insert({ name: 'taco', tasty: true }, function (err, result) {console.log('FOOD')});
-
-	deleteAllCollections();
-});
-
-function deleteAllCollections () {
-	db.listCollections().toArray((err, coll) => {
-		coll.forEach(collection => {
-			db.collection(collection.name).drop((err, delOk) => {
+let clientConnect = () => {
+	return new Promise((resolve, reject) => (
+		MongoClient.connect(config.dbUrl, { useNewUrlParser: true },
+			(err, client) => {
 				if (err) throw err;
-				if (delOk) console.log(`[MONGO_DB] Droped collection \'${collection.name}\'`);
-			});
-		});
-		console.log('after foreach');
-	});
+				
+				console.log(`[MongoDB] Connected to ${config.dbUrl}`);
+
+				resolve(client);
+			})
+	))
 }
+
+let removeAll = (client) => {
+	return new Promise((resolve, reject) => (
+		client.db(config.dbName).listCollections().toArray((err, collections) => {
+			if (err) throw err;
+
+			collections.forEach(async collection => {
+				await client.db(config.dbName).collection(collection.name).drop();
+			});
+		
+			resolve();
+		})
+	))
+}
+
+let disconnectClient = (client) => {
+	client.close();
+	console.log('[MongoDB] Disconnected.');
+}
+
+let main = async () => {
+	// Connexion à la base de données.
+	let client = await clientConnect();
+
+	// Suppression de toutes les collection courantes.
+	await removeAll(client);
+
+	
+
+	// Déconnexion de la base de donnée.
+	disconnectClient(client);
+}
+
+main();
