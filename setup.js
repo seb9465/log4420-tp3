@@ -66,6 +66,36 @@ let addNews = (client) => {
 	))
 }
 
+let addSeminars = (client) => {
+	return new Promise((resolve, reject) => (
+		fs.readFile('./data/seminars.yml', 'utf8', async (err, content) => {
+			if (err) {
+				throw err;
+			} else {
+				await client.db(config.dbName).createCollection('seminars');
+				const yamlContentOpt = yaml.safeLoad(content);
+				const seminars = ((yamlContentOpt === null) ? [] : yamlContentOpt).map(s => {
+					return {
+						...s,
+						type: 'seminar',
+						date: moment(s.date, 'YYYY-MM-DD HH:mm:ss').toDate(),
+						createdAt: moment(s.createdAt, 'YYYY-MM-DD HH:mm:ss').toDate()
+					}
+				});
+	
+				const col = client.db(config.dbName).collection('seminars');
+				seminars.forEach(async doc => {
+					await col.insertOne({...doc});
+				});
+
+				console.log('[MongoDB] Added seminars from YAML.');
+
+				resolve()
+			}
+		})
+	))
+}
+
 let addProjects = (client) => {
 	return new Promise((resolve, reject) => (
 		fs.readFile('./data/projects.yml', 'utf8', async (err, content) => {
@@ -105,6 +135,8 @@ let main = async () => {
 	await addNews(client);
 
 	await addProjects(client);
+
+	await addSeminars(client);
 
 	// Déconnexion de la base de donnée.
 	disconnectClient(client);
