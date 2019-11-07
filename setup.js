@@ -55,7 +55,7 @@ let addNews = (client) => {
 	
 				const col = client.db(config.dbName).collection('news');
 				news.forEach(async doc => {
-					await col.insertOne({doc});
+					await col.insertOne({...doc});
 				});
 
 				resolve()
