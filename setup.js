@@ -124,6 +124,57 @@ let addProjects = (client) => {
 	))
 }
 
+let addTeam = (client) => {
+	return new Promise((resolve, reject) => (
+		fs.readFile('./data/team.yml', 'utf8', async (err, content) => {
+			if (err) {
+				throw err;
+			} else {
+				await client.db(config.dbName).createCollection('members');
+				const yamlContentOpt = yaml.safeLoad(content);
+				const members = ((yamlContentOpt === null) ? [] : yamlContentOpt);
+				
+				const col = client.db(config.dbName).collection('members');
+				members.forEach(async doc => {
+					await col.insertOne({...doc});
+				});
+
+				console.log('[MongoDB] Added members from YAML.');
+
+				resolve()
+			}
+		})
+	))
+}
+
+let addPublications = (client) => {
+	return new Promise((resolve, reject) => (
+		fs.readFile('./data/publications.yml', 'utf8', async (err, content) => {
+			if (err) {
+				throw err;
+			} else {
+				await client.db(config.dbName).createCollection('publications');
+				const yamlContentOpt = yaml.safeLoad(content);
+				const publications = ((yamlContentOpt === null) ? [] : yamlContentOpt).map(s => {
+					return {
+						...s,
+						month: (s.month === undefined) ? undefined : moment().month(s.month - 1).format('MMMM')
+					}
+				});
+
+				const col = client.db(config.dbName).collection('publications');
+				publications.forEach(async doc => {
+					await col.insertOne({ ...doc });
+				});
+
+				console.log('[MongoDB] Added publications from YAML.');
+
+				resolve()
+			}
+		})
+	))
+}
+
 
 let main = async () => {
 	// Connexion à la base de données.
@@ -132,11 +183,20 @@ let main = async () => {
 	// Suppression de toutes les collection courantes.
 	await removeAll(client);
 
+	// Ajout des news YAML dans la DB
 	await addNews(client);
-
+	
+	// Ajout des projects YAML dans la DB
 	await addProjects(client);
-
+	
+	// Ajout des seminars YAML dans la DB
 	await addSeminars(client);
+	
+	// Ajout des members YAML dans la DB
+	await addTeam(client);
+
+	// Ajout des publications YAML dans la DB
+	await addPublications(client);
 
 	// Déconnexion de la base de donnée.
 	disconnectClient(client);
