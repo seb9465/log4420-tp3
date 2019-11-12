@@ -102,12 +102,12 @@ module.exports = servicePublication => {
 				if (err.name === 'NOT_FOUND') {
 					const isTranslationNotOk = req.app.locals.t === undefined ||
 						req.app.locals.t['ERRORS'] === undefined ||
-						req.app.locals.t['ERRORS']['PUB_NOT_FOUND_ERROR'] === undefined;
+						req.app.locals.t['ERRORS']['PUB_DELETE_ERROR'] === undefined;
 
 					if (isTranslationNotOk) {
 						res.status(404).json({ 'errors': [err.message] });
 					} else {
-						res.status(404).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_NOT_FOUND_ERROR']] });
+						res.status(404).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_DELETE_ERROR']] });
 					}
 				} else {
 					const isTranslationNotOk = req.app.locals.t === undefined ||
