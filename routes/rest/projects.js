@@ -36,11 +36,11 @@ module.exports = (serviceProjects, servicePublication) => {
 				} else {
 					const isTranslationNotOk = req.app.locals.t === undefined ||
 						req.app.locals.t['ERRORS'] === undefined ||
-						req.app.locals.t['ERRORS']['PROJECT_ERROR'] === undefined;
+						req.app.locals.t['ERRORS']['PROJECTS_ERROR'] === undefined;
 					if (isTranslationNotOk) {
 						res.status(500).json({ 'errors': [err.message] });
 					} else {
-						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PROJECT_ERROR']] });
+						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PROJECTS_ERROR']] });
 					}
 				}
 			} else {
