@@ -96,34 +96,6 @@ let addSeminars = (client) => {
 	))
 }
 
-let addProjects = (client) => {
-	return new Promise((resolve, reject) => (
-		fs.readFile('./data/projects.yml', 'utf8', async (err, content) => {
-			if (err) {
-				throw err;
-			} else {
-				await client.db(config.dbName).createCollection('projects');
-				const yamlContentOpt = yaml.safeLoad(content);
-				const projects = ((yamlContentOpt === null) ? [] : yamlContentOpt).map(s => {
-					return {
-						...s,
-						publications: (s.publications === undefined) ? [] : s.publications
-					}
-				});
-	
-				const col = client.db(config.dbName).collection('projects');
-				projects.forEach(async doc => {
-					await col.insertOne({...doc});
-				});
-
-				console.log('[MongoDB] Added projects from YAML.');
-
-				resolve()
-			}
-		})
-	))
-}
-
 let addTeam = (client) => {
 	return new Promise((resolve, reject) => (
 		fs.readFile('./data/team.yml', 'utf8', async (err, content) => {
@@ -175,6 +147,43 @@ let addPublications = (client) => {
 	))
 }
 
+let addProjects = (client) => {
+	return new Promise((resolve, reject) => (
+		fs.readFile('./data/projects.yml', 'utf8', async (err, content) => {
+			if (err) {
+				throw err;
+			} else {
+				// Création de la nouvelle collection.
+				await client.db(config.dbName).createCollection('projects');
+				const pubsDB = await client.db(config.dbName).collection('publications').find().toArray();
+
+				// Récupération des informations du fichier YAML.
+				const yamlContentOpt = yaml.safeLoad(content);
+				const projects = ((yamlContentOpt === null) ? [] : yamlContentOpt).map(s => {
+					s.publications = (s.publications === undefined) ? [] : s.publications;
+
+					const pubIds = s.publications.map(p => pubsDB.find(elem => elem.key === p)._id);
+
+					return {
+						...s,
+						publications: pubIds
+					}
+				});
+				
+				// Ajout des informations du fichier YAML dans la collection `projects`.
+				const projectsCol = client.db(config.dbName).collection('projects');
+				projects.forEach(async doc => {
+					await projectsCol.insertOne({...doc});
+				});
+
+				console.log('[MongoDB] Added projects from YAML.');
+
+				resolve();
+			}
+		})
+	))
+}
+
 
 let main = async () => {
 	// Connexion à la base de données.
@@ -186,17 +195,17 @@ let main = async () => {
 	// Ajout des news YAML dans la DB
 	await addNews(client);
 	
-	// Ajout des projects YAML dans la DB
-	await addProjects(client);
-	
 	// Ajout des seminars YAML dans la DB
 	await addSeminars(client);
 	
 	// Ajout des members YAML dans la DB
 	await addTeam(client);
-
+	
 	// Ajout des publications YAML dans la DB
 	await addPublications(client);
+	
+	// Ajout des projects YAML dans la DB
+	await addProjects(client);
 
 	// Déconnexion de la base de donnée.
 	disconnectClient(client);
