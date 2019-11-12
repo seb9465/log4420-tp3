@@ -27,11 +27,11 @@ module.exports = (serviceProjects, servicePublication) => {
 				if (err.name == 'NOT_FOUND') {
 					const isTranslationNotOk = req.app.locals.t === undefined ||
 						req.app.locals.t['ERRORS'] === undefined ||
-						req.app.locals.t['ERRORS']['PROJECT_NOT_FOUND_ERROR'] === undefined;
+						req.app.locals.t['ERRORS']['PROJECT_NOT_FOUND'] === undefined;
 					if (isTranslationNotOk) {
 						res.status(404).json({ 'errors': [err.message] });
 					} else {
-						res.status(404).json({ 'errors': [req.app.locals.t['ERRORS']['PROJECT_NOT_FOUND_ERROR'] + req.params.id] });
+						res.status(404).json({ 'errors': [req.app.locals.t['ERRORS']['PROJECT_NOT_FOUND'] + req.params.id] });
 					}
 				} else {
 					const isTranslationNotOk = req.app.locals.t === undefined ||
