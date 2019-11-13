@@ -88,7 +88,8 @@ app.use((err, req, res, next) => {
 // TODO : À vérifier
 app.listen(port, async () => {
 	try {
-		app.db = await MongoClient.connect(config.dbUrl, { useNewUrlParser: true })
+		const client = await MongoClient.connect(config.dbUrl, { useNewUrlParser: true });
+		app.db = client.db(config.dbName);
 		console.log(`[MongoDB] Connected to ${config.dbUrl}`);
 	} catch (err) {
 		throw err;
