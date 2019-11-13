@@ -47,8 +47,47 @@ const getNumberOfPublications = db => callback => {
  *  @param {publicationsCallback} callback - Fonction de rappel pour obtenir le résultat
  */
 const getPublications = db => pagingOpts => callback => {
-	// À COMPLÉTER
-	callback(null, [])
+	db.collection('publications').find().toArray((err, dbPublications) => {
+		const publications = (dbPublications === null ? [] : dbPublications)
+			.sort(comparePublications(pagingOpts))
+			.map(pub => {
+				return {
+					...pub,
+					month: (pub.month === undefined) ? undefined : moment().month(pub.month - 1).format('MMMM')
+				}
+			});
+
+		if (pagingOpts === undefined || pagingOpts.pageNumber === undefined || pagingOpts.limit === undefined) {
+			callback(null, publications)
+		} else {
+			const startIndex = (pagingOpts.pageNumber - 1) * pagingOpts.limit
+			const endIndex = startIndex + pagingOpts.limit
+			const topNPublications = publications.slice(startIndex, endIndex)
+
+			callback(null, topNPublications)
+		}
+	});
+}
+
+/**
+ *  Fonction de comparaison de publications.
+ *
+ *  @param pagingOpts - Options pour la pagination qui contient entre autre
+ *    des options pour le trie
+ *  @param p1 - Première publication à comparer
+ *  @param p2 - Deuxième publication à comparer
+ *  @returns Valeurs de comparaison -1, 1 ou 0
+ */
+const comparePublications = pagingOpts => (p1, p2) => {
+	return pagingOpts.sorting.reduce((acc, sort) => {
+		if (acc === 0) {
+			const field = sort[0]
+			const order = sort[1]
+			const compare = p1[field] < p2[field] ? -1 : p1[field] > p2[field] ? 1 : 0
+			return order === 'asc' ? compare : order === 'desc' ? -compare : compare
+		}
+		return acc
+	}, 0)
 }
 
 /**
