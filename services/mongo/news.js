@@ -17,12 +17,12 @@ const { getTranslation } = require('../utils')
  *  @param {newsCallback} callback - Fonction de rappel pour obtenir le résultat
  */
 const getNews = db => language => callback => {
-  // À COMPLÉTER
-  callback(null, [])
+
+	callback(null, [])
 }
 
 module.exports = db => {
-  return {
-    getNews: getNews(db)
-  }
+	return {
+		getNews: getNews(db)
+	}
 }
