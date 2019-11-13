@@ -7,12 +7,12 @@
  */
 
 const getTeamMembers = db => callback => {
-  // À COMPLÉTER
-  callback(null, [])
+
+	callback(null, [])
 }
 
 module.exports = db => {
-  return {
-    getTeamMembers: getTeamMembers(db)
-  }
+	return {
+		getTeamMembers: getTeamMembers(db)
+	}
 }
