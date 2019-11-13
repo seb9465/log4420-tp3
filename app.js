@@ -87,10 +87,8 @@ app.use((err, req, res, next) => {
 // Amorçage de l'application web avec la base de données
 // TODO : À vérifier
 app.listen(port, async () => {
-	let client;
-
 	try {
-		client = await MongoClient.connect(config.dbUrl, { useNewUrlParser: true })
+		app.db = await MongoClient.connect(config.dbUrl, { useNewUrlParser: true })
 		console.log(`[MongoDB] Connected to ${config.dbUrl}`);
 	} catch (err) {
 		throw err;
