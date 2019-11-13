@@ -17,8 +17,9 @@ const ObjectId = require('mongodb').ObjectId
  *  @param {projectsCallback} callback - Fonction de rappel pour obtenir le résultat
  */
 const getProjects = db => language => callback => {
-  // À COMPLÉTER
-  callback(null, [])
+
+
+	callback(null, [])
 }
 
 /**
@@ -39,13 +40,13 @@ const getProjects = db => language => callback => {
  *  @param {projectCallback} callback - Fonction de rappel pour obtenir le résultat
  */
 const getProjectById = db => translationObj => language => id => callback => {
-  // À COMPLÉTER
-  callback()
+	// À COMPLÉTER
+	callback()
 }
 
 module.exports = db => {
-  return {
-    getProjects: getProjects(db),
-    getProjectById: getProjectById(db)
-  }
+	return {
+		getProjects: getProjects(db),
+		getProjectById: getProjectById(db)
+	}
 }
