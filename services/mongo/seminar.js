@@ -19,12 +19,12 @@ const { getTranslation } = require('../utils')
  *  @param {seminarCallback} callback - Fonction de rappel pour obtenir le résultat
  */
 const getSeminars = db => query => language => callback => {
-  // À COMPLÉTER
-  callback(null, [])
+
+	callback(null, [])
 }
 
 module.exports = db => {
-  return {
-    getSeminars: getSeminars(db)
-  }
+	return {
+		getSeminars: getSeminars(db)
+	}
 }
