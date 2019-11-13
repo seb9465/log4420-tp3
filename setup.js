@@ -16,7 +16,6 @@ let clientConnect = () => {
 			})
 	))
 }
-module.exports.clientConnect = clientConnect;
 
 let removeAll = (client) => {
 	return new Promise((resolve, reject) => (
@@ -209,9 +208,5 @@ let main = async () => {
 	await addProjects(client);
 
 	// Déconnexion de la base de donnée.
-	// disconnectClient(client);
-
-	return client;
+	disconnectClient(client);
 }
-
-module.exports.main = main;
