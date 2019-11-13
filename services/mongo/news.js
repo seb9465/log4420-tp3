@@ -22,12 +22,11 @@ const getNews = db => language => callback => {
 		if (err) throw err;
 
 		const news = (dbNews === null ? [] : dbNews).map(n => {
-			const translatedText = getTranslation(language, n.text);
+			n.text = getTranslation(language, n.text);
 			n.createdAt = moment(n.createdAt, 'YYYY-MM-DD HH:mm:ss').toDate();
 
 			return {
-				...n,
-				text: translatedText
+				...n
 			}
 		})
 

@@ -19,8 +19,20 @@ const { getTranslation } = require('../utils')
  *  @param {seminarCallback} callback - Fonction de rappel pour obtenir le résultat
  */
 const getSeminars = db => query => language => callback => {
+	db.collection('seminars').find().toArray((err, dbSeminars) => {
+		const seminars = (dbSeminars === null ? [] : dbSeminars).map(s => {
+			s.title = getTranslation(language, s.title);
+			s.description = getTranslation(language, s.description);
+			s.date = moment(s.date, 'YYYY-MM-DD HH:mm:ss').toDate();
+			s.createdAt = moment(s.createdAt, 'YYYY-MM-DD HH:mm:ss').toDate();
+			
+			return {
+				...s
+			}
+		});
 
-	callback(null, [])
+		callback(null, seminars);
+	});
 }
 
 module.exports = db => {
