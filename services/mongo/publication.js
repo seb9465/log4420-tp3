@@ -112,7 +112,7 @@ const comparePublications = pagingOpts => (p1, p2) => {
  *  @param {createdPublicationCallback} callback - Fonction de rappel pour obtenir la publication créée
  */
 const createPublication = db => publication => callback => {
-	db.collection('publications').insert(publication, (err, pub) => {
+	db.collection('publications').insertOne(publication, (err, pub) => {
 		if (err) {
 			callback(err, null);
 		} else {
