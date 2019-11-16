@@ -210,3 +210,5 @@ let main = async () => {
 	// Déconnexion de la base de donnée.
 	disconnectClient(client);
 }
+
+main();
