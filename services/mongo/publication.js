@@ -116,7 +116,6 @@ const createPublication = db => publication => callback => {
 		if (err) {
 			callback(err, null);
 		} else {
-			console.log(pub);
 			callback(null, pub);
 		}
 	});
@@ -155,8 +154,15 @@ const removePublication = db => id => callback => {
  *  @param {projectPublicationsCallback} callback - Fonction de rappel pour obtenir le résultat
  */
 const getPublicationsByIds = db => pubIds => callback => {
-	// À COMPLÉTER
-	callback(null, [])
+	db.collection('publications')
+		.find({ _id: { $in: pubIds } })
+		.toArray((err, pubs) => {
+			if (err) {
+				callback(err, null);
+			} else {
+				callback(null, pubs);
+			}
+		})
 }
 
 module.exports = db => {
