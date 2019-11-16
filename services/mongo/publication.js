@@ -49,7 +49,7 @@ const getNumberOfPublications = db => callback => {
 const getPublications = db => pagingOpts => callback => {
 	db.collection('publications').find().toArray((err, dbPublications) => {
 		const publications = (dbPublications === null ? [] : dbPublications)
-			.sort(comparePublications(pagingOpts))
+			
 			.map(pub => {
 				return {
 					...pub,
@@ -57,9 +57,15 @@ const getPublications = db => pagingOpts => callback => {
 				}
 			});
 
-		if (pagingOpts === undefined || pagingOpts.pageNumber === undefined || pagingOpts.limit === undefined) {
+		if (pagingOpts.sorting) {
+			publications.sort(comparePublications(pagingOpts));
+		}
+
+		if (pagingOpts === undefined || pagingOpts.pageNumber === undefined && pagingOpts.limit === undefined) {
 			callback(null, publications)
 		} else {
+			pagingOpts.pageNumber = pagingOpts.pageNumber ? pagingOpts.pageNumber : 1;
+
 			const startIndex = (pagingOpts.pageNumber - 1) * pagingOpts.limit
 			const endIndex = startIndex + pagingOpts.limit
 			const topNPublications = publications.slice(startIndex, endIndex)
@@ -106,8 +112,14 @@ const comparePublications = pagingOpts => (p1, p2) => {
  *  @param {createdPublicationCallback} callback - Fonction de rappel pour obtenir la publication créée
  */
 const createPublication = db => publication => callback => {
-	// À COMPLÉTER
-	callback()
+	db.collection('publications').insert(publication, (err, pub) => {
+		if (err) {
+			callback(err, null);
+		} else {
+			console.log(pub);
+			callback(null, pub);
+		}
+	});
 }
 
 /**
@@ -118,8 +130,13 @@ const createPublication = db => publication => callback => {
  *  @param callback - Fonction de rappel qui valide la suppression
  */
 const removePublication = db => id => callback => {
-	// À COMPLÉTER
-	callback()
+	db.collection('publications').deleteOne({ _id: id }, (err, response) => {
+		if (err) {
+			callback(err, null);
+		} else {
+			callback(null, response);
+		}
+	})
 }
 
 /**
