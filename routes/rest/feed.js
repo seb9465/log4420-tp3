@@ -4,7 +4,7 @@ module.exports = serviceFeed => {
 	const router = express.Router()
 
 	router.get('/', (req, res, next) => {
-		serviceFeed.getFeeds(/* from date */)(req.app.locals.lang)((err, feeds) => {
+		serviceFeed.getFeeds(new Date(2019, 09))(req.app.locals.lang)((err, feeds) => {
 			if (err) {
 				const isTranslationNotOk = req.app.locals.t === undefined ||
 					req.app.locals.t['ERRORS'] === undefined ||
