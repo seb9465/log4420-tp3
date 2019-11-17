@@ -35,7 +35,7 @@ block content
         label(for='month')
           = t.PUBLICATIONS.MONTH_TXT
           | #{' '}
-        select(name='month') //, required)
+        select(name='month', required)
           option(value='')
             | - #{' '}
             = t.PUBLICATIONS.MONTH_TXT
@@ -119,7 +119,35 @@ block script-content
     });
 
     document.querySelector('form').addEventListener('submit', event => {
-      event.target.action = document.location.href
+      const req = new XMLHttpRequest()
+
+      let data = {}
+      data.year = Number(document.querySelector('form').elements['year'].value)
+      data.authors = document.querySelector('form').elements['authors[]'].value
+      data.month = Number(document.querySelector('form').elements['month'].value)
+      data.title = document.querySelector('form').elements['title'].value
+      data.venue = document.querySelector('form').elements['venue'].value
+
+      const json = JSON.stringify(data)
+
+      req.open('POST', '/api/publications/', true)
+      req.setRequestHeader('Content-type','application/json; charset=utf-8');
+        req.onreadystatechange = () => {
+        if (req.readyState == XMLHttpRequest.DONE) {
+          if (req.status == 201) {
+            const url = new URL(document.location.href)
+            document.location.href = url
+          }
+          else if (req.status == 400) {
+            alert('There was an error 400')
+          }
+          else {
+            alert('something else other than 200 was returned')
+          }
+        }
+      }
+
+      req.send(json)
     })
 
     document.querySelectorAll('.pagination a.pagination-link').forEach(a => {

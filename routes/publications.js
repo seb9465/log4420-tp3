@@ -17,26 +17,51 @@ function getPublications (req, res, next) {
 		headers: {Cookie: `ulang=${req.app.locals.lang}`}
 	};
 
-	fetch('http://localhost:3000/api/publications/', opts)
+	let q = encodeQueryData(req.query);
+	q = q ? '?' + q : q;
+
+	fetch(`http://localhost:3000/api/publications${q}`, opts)
 		.then(response => response.json())
 		.then(publications => {
+			const sortByOptions = { date: 'date', title: 'title' };
+			const orderByOptions = { asc: 'asc', desc: 'desc' };
+
+			const limit = req.query && req.query.limit ? req.query.limit : 10;	// limite par page
+			const page = req.query && req.query.page ? req.query.page : 1;		// numéro de la page du tableau
+			const sortBy = req.query && req.query.sort_by ? req.query.sort_by : sortByOptions.date;
+			const orderBy = req.query && req.query.order_by ? req.query.order_by : orderByOptions.desc;
+			const pageOpts = {
+				limit: limit,
+				pageNumber: page,
+				orderBy: orderBy,
+				sortBy: sortBy
+			};
+
 			const objForTemplate = {
 				publications: publications.publications,
-				pubFormErrors: {},	// TODO
-				pagingOptions: {},
-				numberOfPages: {},
+				pubFormErrors: {},
+				pagingOptions: pageOpts,
+				numberOfPages: Math.ceil(publications.count / pageOpts.limit),
 				monthNames: moment.months()
 			};
 			
 			res.render('./../views/publication', objForTemplate, (err, html) => {
 				if (err) {
-					throw err;
+					next(err);
 				} else {
 					res.send(html);
 				}
 			});
 		});
 }
+
+/* Tiré de stackoverflow */
+function encodeQueryData(data) {
+	const ret = [];
+	for (let d in data)
+	  ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+	return ret.join('&');
+ }
 
 /**
  * Saves a publication by calling the BE's API.

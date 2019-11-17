@@ -8,10 +8,10 @@ module.exports = servicePublication => {
 		const sortByOptions = { date: 'date', title: 'title' };
 		const orderByOptions = { asc: 'asc', desc: 'desc' };
 
-		const limit = req.params && req.param.limit ? req.params.limit : 10;
-		const page = req.params && req.param.page ? req.params.page : 1;
-		const sortBy = req.params && req.param.sort_by ? req.params.sort_by : sortByOptions.date;
-		const orderBy = req.params && req.params.order_by ? req.params.order_by : orderByOptions.desc;
+		const limit = req.query && req.query.limit ? req.query.limit : 10;
+		const page = req.query && req.query.page ? req.query.page : 1;
+		const sortBy = req.query && req.query.sort_by ? req.query.sort_by : sortByOptions.date;
+		const orderBy = req.query && req.query.order_by ? req.query.order_by : orderByOptions.desc;
 		const pageOpts = {
 			limit: limit,
 			pageNumber: page,
@@ -32,7 +32,9 @@ module.exports = servicePublication => {
 				}
 			} else {
 				data = data ? data : [];
-				res.json({ 'count': data.length, 'publications': data});
+				servicePublication.getNumberOfPublications((err, nbData) => {
+					res.json({ 'count': nbData, 'publications': data});
+				})
 			}
 		});
 	});
@@ -45,7 +47,6 @@ module.exports = servicePublication => {
 		const errors = []
 
 		// req.body vide
-
 		if (req.body === undefined || Object.keys(req.body).length === 0) {
 			errors.push(req.app.locals.t['ERRORS']['EMPTY_PUBLICATION_FORM']);
 		} else {
@@ -72,6 +73,8 @@ module.exports = servicePublication => {
 		}
 		
 		if (errors.length > 0) {
+			console.error(`[PUBLICATIONS] POST - ${errors}`);
+
 			res.status(400).json({ 'errors': errors });
 		} else {
 			const publication = {

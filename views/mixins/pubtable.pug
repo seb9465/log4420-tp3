@@ -8,7 +8,7 @@ mixin pubtable(publications)
           td
             span.annee= pub.year
             br
-            if pub.month
+            if pub.month && pub.month !== 'undefined'
               span.mois= pub.month
           td.publication
             p.pubtitle
