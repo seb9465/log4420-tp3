@@ -87,13 +87,8 @@ const filterSeminarsByFromDate = query => seminars => {
    */
   const compare = order => v1 => v2 => {
 	if (order === 'ASC') {
-		console.log('ASC')
-		console.log(v1)
-		console.log(v2)
-		console.log((v1 < v2) ? -1 : v1 > v2 ? 1 : 0)
 		return (v1 < v2) ? -1 : v1 > v2 ? 1 : 0
 	} else if (order === 'DESC') {
-		console.log('DESC')
 	  return (v1 < v2) ? 1 : v1 > v2 ? -1 : 0
 	} else {
 	  return 0
