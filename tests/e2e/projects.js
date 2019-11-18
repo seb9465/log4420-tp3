@@ -70,7 +70,7 @@ module.exports = {
       this.expect.element('.meta p:nth-child(3)').text.to.contain('Co-directeur(e)(s): Michel Deslauriers')
       this.expect.element('.description > div p').text.to.contain('L’évolution récente du Web sémantique, tant par la quantité')
 
-      this.expect.elements('.publications tr').count.to.equal(4)
+      this.expect.elements('.publications tr').count.to.equal(3)
       this.expect.elements('.publications tr:nth-child(1)').text.to.contain('2017')
       this.expect.elements('.publications tr:nth-child(1)').text.to.contain('Janvier')
       this.expect.elements('.publications tr:nth-child(4)').text.to.contain('2015')

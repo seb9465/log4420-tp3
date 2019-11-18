@@ -127,13 +127,9 @@ let addPublications = (client) => {
 				await client.db(config.dbName).createCollection('publications');
 				const yamlContentOpt = yaml.safeLoad(content);
 				const publications = ((yamlContentOpt === null) ? [] : yamlContentOpt)
-					.sort((a, b) => {
-						return a.year < b.year ? -1 : a.year > b.year ? 1 : 0;
-					})
 					.map(s => {
 						return {
-							...s,
-							month: (s.month === undefined) ? undefined : moment().month(s.month - 1).format('MMMM')
+							...s
 						}
 					});
 

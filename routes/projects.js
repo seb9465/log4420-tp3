@@ -19,7 +19,9 @@ router.get('/', (req, res, next) => {
 });
 
 router.get('/:id', (req, res, next) => {
-	fetch('http://localhost:3000/api/projects/' + req.params.id)
+	const headers = { headers: {Cookie: `ulang=${req.app.locals.lang}`} };
+
+	fetch('http://localhost:3000/api/projects/' + req.params.id, headers)
 		.then(response => response.json())
 		.then(project => {
 			const objForTemplate = {

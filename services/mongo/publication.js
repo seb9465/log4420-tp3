@@ -51,7 +51,8 @@ const getPublications = db => pagingOpts => callback => {
 		const publications = (dbPublications === null ? [] : dbPublications)
 			.map(pub => {
 				return {
-					...pub
+					...pub,
+					month: pub.month === undefined ? undefined : moment().month(pub.month - 1).format('MMMM')
 				}
 			});
 
@@ -62,10 +63,14 @@ const getPublications = db => pagingOpts => callback => {
 				let compare;
 				
 				if (field === 'date') {
-					compare = a.year < b.year ? -1 : a.year > b.year ? 1 : 0;
+					const date1 = a.month ? moment().year(a.year).month(a.month) : moment().year(a.year).month(0).startOf('month');
+					const date2 = b.month ? moment().year(b.year).month(b.month) : moment().year(b.year).month(0).startOf('month');
+
+					compare = moment(date1).isBefore(date2) ? -1 : moment(date1).isAfter(date2) ? 1 : 0;
 				} else {
 					compare = a.title < b.title ? -1 : a.title > b.title ? 1 : 0;
 				}
+				
 				return order === 'asc' ? compare : order === 'desc' ? -compare : compare;
 			});
 		}
@@ -144,11 +149,19 @@ const removePublication = db => id => callback => {
 const getPublicationsByIds = db => pubIds => callback => {
 	db.collection('publications')
 		.find({ _id: { $in: pubIds } })
-		.toArray((err, pubs) => {
+		.toArray((err, dbPubs) => {
 			if (err) {
 				callback(err, null);
 			} else {
-				callback(null, pubs);
+				const publications = (dbPubs === null ? [] : dbPubs)
+					.map(pub => {
+						return {
+							...pub,
+							month: pub.month === undefined ? undefined : moment().month(pub.month - 1).format('MMMM')
+						}
+					});
+
+				callback(null, publications);
 			}
 		})
 }

@@ -2,7 +2,6 @@ const express = require('express')
 const fetch = require('node-fetch')
 const router = express.Router()
 const moment = require('moment')
-const changeLang = require('./../middlewares/changeLang').changeLang
 
 /**
  * Gets all the the publications by calling the BE's API.
@@ -79,7 +78,7 @@ function savePublication (req, res, next) {
 		.then(response => next());
 }
 
-router.get('/', changeLang, getPublications);
+router.get('/', getPublications);
 
 router.post('/', savePublication, getPublications);
 
