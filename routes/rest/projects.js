@@ -10,6 +10,7 @@ module.exports = (serviceProjects, servicePublication) => {
 				const isTranslationNotOk = req.app.locals.t === undefined ||
 						req.app.locals.t['ERRORS'] === undefined ||
 						req.app.locals.t['ERRORS']['PROJECTS_ERROR'] === undefined;
+					
 					if (isTranslationNotOk) {
 						res.status(500).json({ 'errors': [err.message] });
 					} else {
@@ -28,6 +29,7 @@ module.exports = (serviceProjects, servicePublication) => {
 					const isTranslationNotOk = req.app.locals.t === undefined ||
 						req.app.locals.t['ERRORS'] === undefined ||
 						req.app.locals.t['ERRORS']['PROJECT_NOT_FOUND'] === undefined;
+					
 					if (isTranslationNotOk) {
 						res.status(404).json({ 'errors': [err.message] });
 					} else {
@@ -37,6 +39,7 @@ module.exports = (serviceProjects, servicePublication) => {
 					const isTranslationNotOk = req.app.locals.t === undefined ||
 						req.app.locals.t['ERRORS'] === undefined ||
 						req.app.locals.t['ERRORS']['PROJECT_ERROR'] === undefined;
+					
 					if (isTranslationNotOk) {
 						res.status(500).json({ 'errors': [err.message] });
 					} else {
@@ -49,7 +52,7 @@ module.exports = (serviceProjects, servicePublication) => {
 				});
 			}
 		});
-	})
+	});
 
 	return router
 }
