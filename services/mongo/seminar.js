@@ -25,7 +25,7 @@ const getSeminars = db => query => language => callback => {
 			s.description = getTranslation(language, s.description);
 			s.date = moment(s.date, 'YYYY-MM-DD HH:mm:ss').toDate();
 			s.createdAt = moment(s.createdAt, 'YYYY-MM-DD HH:mm:ss').toDate();
-			
+
 			return {
 				...s
 			}
@@ -50,50 +50,50 @@ const getSeminars = db => query => language => callback => {
  */
 const filterSeminarsByFromDate = query => seminars => {
 	if (query !== undefined && query.from !== undefined) {
-	  return seminars.filter(s => s.date > query.from)
+		return seminars.filter(s => s.date > query.from)
 	} else {
-	  return seminars
+		return seminars
 	}
-  }
-  
-  /**
-   *  Trie les séminaires selon un champ et un ordre particulier.
-   *
-   *  Si le champ et/ou l'ordre n'est pas fournis, on renvoie le tableau initial.
-   *
-   *  @param {Object} query - Objet avec le champ 'query.sort.field' et 'query.sort.order'
-   *  @param {Array} seminars - Tableau de séminaires à filtrer
-   *  @returns {Array} Tableau de séminaires potentiellement trié
-   */
-  const sortSeminars = query => seminars => {
+}
+
+/**
+ *  Trie les séminaires selon un champ et un ordre particulier.
+ *
+ *  Si le champ et/ou l'ordre n'est pas fournis, on renvoie le tableau initial.
+ *
+ *  @param {Object} query - Objet avec le champ 'query.sort.field' et 'query.sort.order'
+ *  @param {Array} seminars - Tableau de séminaires à filtrer
+ *  @returns {Array} Tableau de séminaires potentiellement trié
+ */
+const sortSeminars = query => seminars => {
 	const canSortByField = query !== undefined &&
-	  query.sort !== undefined &&
-	  query.sort.field !== undefined &&
-	  (query.sort.order === 'ASC' || query.sort.order === 'DESC')
+		query.sort !== undefined &&
+		query.sort.field !== undefined &&
+		(query.sort.order === 'ASC' || query.sort.order === 'DESC')
 	if (canSortByField) {
-	  return seminars.sort((s1, s2) => compare(query.sort.order)(s1[query.sort.field])(s2[query.sort.field]))
+		return seminars.sort((s1, s2) => compare(query.sort.order)(s1[query.sort.field])(s2[query.sort.field]))
 	} else {
-	  return seminars
+		return seminars
 	}
-  }
-  
-  /**
-   *  Fonction de comparaison entre deux valeurs et un ordre.
-   *
-   *  @param {string} order - Valeurs ASC ou DESC
-   *  @param v1 - Première valeur
-   *  @param v2 - Deuxième valeur
-   *  @returns {int} Valeur de -1, 0 ou 1 selon le paramètre order
-   */
-  const compare = order => v1 => v2 => {
+}
+
+/**
+ *  Fonction de comparaison entre deux valeurs et un ordre.
+ *
+ *  @param {string} order - Valeurs ASC ou DESC
+ *  @param v1 - Première valeur
+ *  @param v2 - Deuxième valeur
+ *  @returns {int} Valeur de -1, 0 ou 1 selon le paramètre order
+ */
+const compare = order => v1 => v2 => {
 	if (order === 'ASC') {
 		return (v1 < v2) ? -1 : v1 > v2 ? 1 : 0
 	} else if (order === 'DESC') {
-	  return (v1 < v2) ? 1 : v1 > v2 ? -1 : 0
+		return (v1 < v2) ? 1 : v1 > v2 ? -1 : 0
 	} else {
-	  return 0
+		return 0
 	}
-  }
+}
 
 module.exports = db => {
 	return {
