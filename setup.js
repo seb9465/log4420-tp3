@@ -159,13 +159,17 @@ let addProjects = (client) => {
 				// Récupération des informations du fichier YAML.
 				const yamlContentOpt = yaml.safeLoad(content);
 				const projects = ((yamlContentOpt === null) ? [] : yamlContentOpt).map(s => {
-					s.publications = (s.publications === undefined) ? [] : s.publications;
+					const pubsKeys = (s.publications === undefined) ? [] : s.publications;
+					s.publications = [];
 
-					const pubIds = s.publications.map(p => pubsDB.find(elem => elem.key === p)._id);
+					pubsKeys.forEach(key => {
+						const pubs = pubsDB.filter(elem => elem.key === key);
+						pubs.forEach(p => s.publications.push(p._id));
+					})
 
 					return {
 						...s,
-						publications: pubIds
+						publications: s.publications
 					}
 				});
 				
