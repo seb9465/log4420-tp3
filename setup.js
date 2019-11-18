@@ -152,16 +152,21 @@ let addProjects = (client) => {
 			if (err) {
 				throw err;
 			} else {
-				// Création de la nouvelle collection.
+				/* 
+					Création de la nouvelle collection.
+				*/
 				await client.db(config.dbName).createCollection('projects');
 				const pubsDB = await client.db(config.dbName).collection('publications').find().toArray();
 
-				// Récupération des informations du fichier YAML.
+				/* 
+					Récupération des informations du fichier YAML. 
+				*/
 				const yamlContentOpt = yaml.safeLoad(content);
 				const projects = ((yamlContentOpt === null) ? [] : yamlContentOpt).map(s => {
 					const pubsKeys = (s.publications === undefined) ? [] : s.publications;
 					s.publications = [];
 
+					// Remplacer chaque `key` du champ `publications` des projets par le `_id` de la publication dans Mongo.
 					pubsKeys.forEach(key => {
 						const pubs = pubsDB.filter(elem => elem.key === key);
 						pubs.forEach(p => s.publications.push(p._id));
@@ -173,11 +178,16 @@ let addProjects = (client) => {
 					}
 				});
 
-				// Retrait du champ `key` pour chaque document de Publications
+				/* 
+					Retrait du champ `key` pour chaque document de Publications 
+				*/
 				client.db(config.dbName).collection('publications').updateMany({}, { $unset : { 'key' : 1 } });
 				
-				// Ajout des informations du fichier YAML dans la collection `projects`.
+				/* 
+					Ajout des informations du fichier YAML dans la collection `projects`. 
+				*/
 				const projectsCol = client.db(config.dbName).collection('projects');
+
 				projects.forEach(async doc => {
 					await projectsCol.insertOne({...doc});
 				});
