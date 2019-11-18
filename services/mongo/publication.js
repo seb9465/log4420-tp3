@@ -63,8 +63,12 @@ const getPublications = db => pagingOpts => callback => {
 				let compare;
 				
 				if (field === 'date') {
-					const date1 = a.month ? moment().year(a.year).month(a.month) : moment().year(a.year).month(0).startOf('month');
-					const date2 = b.month ? moment().year(b.year).month(b.month) : moment().year(b.year).month(0).startOf('month');
+					const date1 = a.month === undefined ? 
+						moment(moment().year(a.year)).month(0).startOf('month') : 
+						moment(moment().year(a.year)).month(a.month);
+					const date2 = b.month === undefined ?
+						moment(moment().year(b.year)).month(0).startOf('month') :
+						moment(moment().year(b.year)).month(b.month);
 
 					compare = moment(date1).isBefore(date2) ? -1 : moment(date1).isAfter(date2) ? 1 : 0;
 				} else {
