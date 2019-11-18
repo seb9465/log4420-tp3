@@ -17,7 +17,7 @@ module.exports = serviceFeed => {
 			} else {
 				res.json(feeds);
 			}
-		})
+		});
 	});
 
 	return router
