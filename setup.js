@@ -172,6 +172,9 @@ let addProjects = (client) => {
 						publications: s.publications
 					}
 				});
+
+				// Retrait du champ `key` pour chaque document de Publications
+				client.db(config.dbName).collection('publications').updateMany({}, { $unset : { 'key' : 1 } });
 				
 				// Ajout des informations du fichier YAML dans la collection `projects`.
 				const projectsCol = client.db(config.dbName).collection('projects');
