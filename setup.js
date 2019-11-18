@@ -59,7 +59,7 @@ let addNews = (client) => {
 
 				console.log('[MongoDB] Added news from YAML.');
 
-				resolve()
+				resolve();
 			}
 		})
 	))
@@ -89,7 +89,7 @@ let addSeminars = (client) => {
 
 				console.log('[MongoDB] Added seminars from YAML.');
 
-				resolve()
+				resolve();
 			}
 		})
 	))
@@ -112,7 +112,7 @@ let addTeam = (client) => {
 
 				console.log('[MongoDB] Added members from YAML.');
 
-				resolve()
+				resolve();
 			}
 		})
 	))
@@ -140,7 +140,7 @@ let addPublications = (client) => {
 
 				console.log('[MongoDB] Added publications from YAML.');
 
-				resolve()
+				resolve();
 			}
 		})
 	))
