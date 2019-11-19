@@ -4,6 +4,7 @@ node_js:
 
 install:
   - npm run ins
+script:
   - npm run test-ci
 
 # deploy:
