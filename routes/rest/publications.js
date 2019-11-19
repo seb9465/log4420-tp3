@@ -1,5 +1,5 @@
-const express = require('express')
-const async = require('async')
+const express = require('express');
+const checkIfTranslationNotOk = require('./utils').checkIfTranslationNotOk;
 
 module.exports = servicePublication => {
 	const router = express.Router()
@@ -21,16 +21,11 @@ module.exports = servicePublication => {
 		};
 
 		servicePublication.getPublications(pageOpts)((err, data) => {
-			if (err) {
-				const isTranslationNotOk = req.app.locals.t === undefined ||
-					req.app.locals.t['ERRORS'] === undefined ||
-					req.app.locals.t['ERRORS']['PUBS_ERROR'] === undefined;
+		if (err) {
+				const isTranslationNotOk = checkIfTranslationNotOk(req.app.locals.t, 'PUBS_ERROR');
+				const errorJson = { 'errors': isTranslationNotOk ? [err.message] : [req.app.locals.t['ERRORS']['PUBS_ERROR']] };
 
-				if (isTranslationNotOk) {
-					res.status(500).json({ 'errors': [err.message] });
-				} else {
-					res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUBS_ERROR']] });
-				}
+				res.status(500).json(errorJson);
 			} else {
 				data = data ? data : [];
 
@@ -89,13 +84,10 @@ module.exports = servicePublication => {
 
 			servicePublication.createPublication(publication)((err, pub) => {
 				if (err) {
-					if (req.app.locals.t === undefined &&
-						req.app.locals.t['ERRORS'] === undefined &&
-						req.app.locals.t['ERRORS']['PUB_CREATE_ERROR'] === undefined) {
-						res.status(500).json({ 'errors': [err.message] });
-					} else {
-						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_CREATE_ERROR']] });
-					}
+					const isTranslationNotOk = checkIfTranslationNotOk(req.app.locals.t, 'PUB_CREATE_ERROR');
+					const errorJson = { 'errors': isTranslationNotOk ? [err.message] : [req.app.locals.t['ERRORS']['PUB_CREATE_ERROR']] };
+
+					res.status(500).json(errorJson);
 				} else {
 					res.status(201).json(pub);
 				}
@@ -107,25 +99,15 @@ module.exports = servicePublication => {
 		servicePublication.removePublication(req.params.id)((err) => {
 			if (err) {
 				if (err.name === 'NOT_FOUND') {
-					const isTranslationNotOk = req.app.locals.t === undefined ||
-						req.app.locals.t['ERRORS'] === undefined ||
-						req.app.locals.t['ERRORS']['PUB_DELETE_ERROR'] === undefined;
+					const isTranslationNotOk = checkIfTranslationNotOk(req.app.locals.t, 'PUB_DELETE_ERROR');
+					const errorJson = { 'errors': isTranslationNotOk ? [err.message] : [req.app.locals.t['ERRORS']['PUB_DELETE_ERROR']] };
 
-					if (isTranslationNotOk) {
-						res.status(404).json({ 'errors': [err.message] });
-					} else {
-						res.status(404).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_DELETE_ERROR']] });
-					}
+					res.status(404).json(errorJson);
 				} else {
-					const isTranslationNotOk = req.app.locals.t === undefined ||
-						req.app.locals.t['ERRORS'] === undefined ||
-						req.app.locals.t['ERRORS']['PUB_DELETE_ERROR'] === undefined;
+					const isTranslationNotOk = checkIfTranslationNotOk(req.app.locals.t, 'PUB_DELETE_ERROR');
+					const errorJson = { 'errors': isTranslationNotOk ? [err.message] : [req.app.locals.t['ERRORS']['PUB_DELETE_ERROR']] };
 
-					if (isTranslationNotOk) {
-						res.status(500).json({ 'errors': [err.message] });
-					} else {
-						res.status(500).json({ 'errors': [req.app.locals.t['ERRORS']['PUB_DELETE_ERROR']] });
-					}
+					res.status(500).json(errorJson);
 				}
 			} else {
 				res.send('done');
