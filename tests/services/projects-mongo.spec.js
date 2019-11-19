@@ -15,6 +15,7 @@ MongoClient.connect(config.dbUrl, { useNewUrlParser: true }, (err, client) => {
   }
   db = client.db(config.dbName)
   executeTestsOnDb(db)
+  client.close()
 })
 
 function executeTestsOnDb(db) {
