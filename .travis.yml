@@ -4,6 +4,7 @@ node_js:
 
 install:
   - npm run ins
+  - npm run test-ci
 
 # deploy:
 #   provider: heroku
