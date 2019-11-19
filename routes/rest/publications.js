@@ -21,7 +21,7 @@ module.exports = servicePublication => {
 		};
 
 		servicePublication.getPublications(pageOpts)((err, data) => {
-		if (err) {
+			if (err) {
 				const isTranslationNotOk = checkIfTranslationNotOk(req.app.locals.t, 'PUBS_ERROR');
 				const errorJson = { 'errors': isTranslationNotOk ? [err.message] : [req.app.locals.t['ERRORS']['PUBS_ERROR']] };
 
