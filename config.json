@@ -1,4 +1,4 @@
 {
-  "dbUrl": "mongodb://localhost:27017",
+  "dbUrl": "mongodb+srv://user1:admin123@log4420-diqyy.mongodb.net/test?retryWrites=true&w=majority",
   "dbName": "log4420"
 }
