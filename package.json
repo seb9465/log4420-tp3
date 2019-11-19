@@ -14,7 +14,7 @@
     ]
   },
   "scripts": {
-	  "ins": "npm install",
+    "ins": "npm install",
     "setup": "node setup.js",
     "start": "npm run setup && nodemon",
     "test-ws": "node_modules/.bin/nyc --reporter=html --reporter=text node_modules/.bin/mocha --recursive --reporter=spec --color=false tests/api",
