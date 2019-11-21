@@ -3,8 +3,6 @@ const router = express.Router()
 const fetch = require('node-fetch')
 const changeLang = require('./../middlewares/changeLang').changeLang
 
-const moment = require('moment')
-
 router.get('/', changeLang, (req, res, next) => {
 	const headers = { headers: {Cookie: `ulang=${req.app.locals.lang}`} };
 	
@@ -20,7 +18,5 @@ router.get('/', changeLang, (req, res, next) => {
 			});
 		});
 });
-
-
 
 module.exports = router

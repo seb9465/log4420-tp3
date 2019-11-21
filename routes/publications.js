@@ -10,10 +10,10 @@ const moment = require('moment')
  * @param {Response} res Response object from Express
  * @param {Function} next Middleware from Express
  */
-function getPublications (req, res, next) {
-	const opts = { 
+function getPublications(req, res, next) {
+	const opts = {
 		methods: 'GET',
-		headers: {Cookie: `ulang=${req.app.locals.lang}`}
+		headers: { Cookie: `ulang=${req.app.locals.lang}` }
 	};
 
 	let q = encodeQueryData(req.query);
@@ -43,7 +43,7 @@ function getPublications (req, res, next) {
 				numberOfPages: Math.ceil(publications.count / pageOpts.limit),
 				monthNames: moment.months()
 			};
-			
+
 			res.render('./../views/publication', objForTemplate, (err, html) => {
 				if (err) {
 					next(err);
@@ -57,10 +57,12 @@ function getPublications (req, res, next) {
 /* Tiré de stackoverflow */
 function encodeQueryData(data) {
 	const ret = [];
-	for (let d in data)
-	  ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+	for (let d in data) {
+		ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
+	}
+
 	return ret.join('&');
- }
+}
 
 /**
  * Saves a publication by calling the BE's API.
@@ -68,10 +70,10 @@ function encodeQueryData(data) {
  * @param {Response} res Response object from Express
  * @param {Function} next Middleware from Express
  */
-function savePublication (req, res, next) {
-	const opts = { 
+function savePublication(req, res, next) {
+	const opts = {
 		methods: 'POST',
-		headers: {Cookie: `ulang=${req.app.locals.lang}`}
+		headers: { Cookie: `ulang=${req.app.locals.lang}` }
 	};
 
 	fetch('http://localhost:3000/api/publications/', opts)
